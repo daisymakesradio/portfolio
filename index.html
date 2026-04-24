@@ -233,7 +233,7 @@
 <div id="terminal">
 
   <div id="boot">
-    <div class="boot-line">// SYSTEM INIT ................................ OK</div>
+    <div class="boot-line">// SYSTEM INIT ............................... OK</div>
     <div class="boot-line">// SIGNAL CARRIER DETECTED ................... OK</div>
     <div class="boot-line">// LOADING AUDIO DRIVERS ..................... OK</div>
     <div class="boot-line">// MOUNTING PORTFOLIO ........................ OK</div>
@@ -242,9 +242,9 @@
   </div>
 
   <div class="banner">
-    <div class="banner-border">===============================================</div>
+    <div class="banner-border">=================================================</div>
     <div class="banner-title">SIGNAL: A DAISYMAKESRADIO PORTFOLIO</div>
-    <div class="banner-border">===============================================</div>
+    <div class="banner-border">=================================================</div>
   </div>
 
   <div id="main-content">
@@ -253,7 +253,7 @@
     <div id="screen-enter" class="screen active">
       <div class="enter-prompt">// transmission ready. awaiting input.</div>
       <button class="enter-btn" id="enter-btn" onclick="handleEnter()">ENTER</button>
-      <button class="music-toggle" id="music-toggle-enter" onclick="toggleHomeMusic()">[ mute home music ]</button>
+<!--       <button class="music-toggle" id="music-toggle-enter" onclick="toggleHomeMusic()">[ mute home music ]</button> -->
       <div id="autoplay-notice">// click ENTER to begin transmission</div>
       <br><br><span class="cursor"></span>
     </div>
@@ -263,11 +263,11 @@
 
       <div class="section-label">// about</div>
       <div class="about-text">
-        <p>Daisy is a radio journalist, producer, and sound designer with 10 years of experience in audio storytelling.</p>
-        <p>This is a transmission from that work — and a first signal toward what comes next.</p>
+        <p>Daisy is a writer, producer, editor, designer and engineer.</p>
+        <p>This is a transmission from her work — an artifact of 10+ years experience in audio storytelling.</p>
       </div>
 
-      <div class="divider">-----------------------------------------------</div>
+<!--       <div class="divider">-----------------------------------------------</div> -->
 
       <div class="section-label">// now playing</div>
       <div class="player">
@@ -281,8 +281,8 @@
         </div>
       </div>
 
-      <div class="back-btn" onclick="goBack()">[ back ]</div>
-      <button class="music-toggle-bottom" id="music-toggle-portfolio" onclick="toggleHomeMusic()">[ mute home music ]</button>
+     <div class="back-btn" onclick="goBack()">[ back ]</div>
+     <!--  <button class="music-toggle-bottom" id="music-toggle-portfolio" onclick="toggleHomeMusic()">[ mute home music ]</button> -->
 
     </div>
 
@@ -291,9 +291,9 @@
 
 <script>
   // ── AUDIO SETUP ──
-  const homeAudio   = new Audio('0 ... home menu.mp3');
-  const bootSound   = new Audio('calling-you.aiff');
-  const mainAudio   = new Audio('MAIN ARTIFACT.mp3');
+  const homeAudio   = new Audio('');
+/*   const bootSound   = new Audio('calling-you.aiff'); */
+  const mainAudio   = new Audio('calling-you.mp3');
 
   homeAudio.loop = true;
   let homeMuted = false;
@@ -305,7 +305,7 @@
     bootSound.play().catch(() => {});
   });
 
-  // ── HOME MUSIC: try autoplay after boot sequence ──
+/*   // ── HOME MUSIC: try autoplay after boot sequence ──
   setTimeout(() => {
     homeAudio.play().then(() => {
       homeMusicStarted = true;
@@ -315,22 +315,22 @@
       document.getElementById('music-toggle-enter').textContent = '[ play home music ]';
       homeMuted = true;
     });
-  }, 2200);
+  }, 2200); */
 
   // ── ENTER BUTTON ──
   function handleEnter() {
-    // If autoplay was blocked, start music on first interaction
+/*     // If autoplay was blocked, start music on first interaction
     if (homeMuted && !homeMusicStarted) {
       homeMuted = false;
       homeMusicStarted = true;
       homeAudio.play().catch(() => {});
       updateMuteLabels(false);
       document.getElementById('autoplay-notice').style.display = 'none';
-    }
+    } */
     showScreen('portfolio');
   }
 
-  // ── MUTE TOGGLE ──
+/*   // ── MUTE TOGGLE ──
   function toggleHomeMusic() {
     homeMuted = !homeMuted;
     homeAudio.muted = homeMuted;
@@ -340,13 +340,13 @@
       homeMusicStarted = true;
     }
     updateMuteLabels(homeMuted);
-  }
+  } */
 
-  function updateMuteLabels(muted) {
+/*   function updateMuteLabels(muted) {
     const label = muted ? '[ play home music ]' : '[ mute home music ]';
     document.getElementById('music-toggle-enter').textContent = label;
     document.getElementById('music-toggle-portfolio').textContent = label;
-  }
+  } */
 
   // ── MAIN ARTIFACT PLAYER ──
   function fmt(s) {
@@ -360,11 +360,11 @@
     document.getElementById('time-display').textContent = fmt(mainAudio.currentTime) + ' / ' + fmt(mainAudio.duration);
   });
 
-  mainAudio.addEventListener('ended', () => {
+/*   mainAudio.addEventListener('ended', () => {
     document.getElementById('play-btn').textContent = 'PLAY';
     document.getElementById('progress-fill').style.width = '0%';
     if (!homeMuted) homeAudio.play();
-  });
+  }); */
 
   document.getElementById('progress-wrap').addEventListener('click', e => {
     if (!mainAudio.duration) return;
