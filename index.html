@@ -250,6 +250,13 @@
       max-width: 620px;
       line-height: 1.6;
     }
+    .video-blurb a {
+      color: var(--dim);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.1s;
+    }
+    .video-blurb a:hover { color: var(--white); }
 
     /* RESUME */
     .resume-wrap {
@@ -325,7 +332,7 @@
         <video controls preload="none">
           <source src="visual_transmission.MOV" type="video/mp4">
         </video>
-        <div class="video-blurb">Excerpts from my stories at Undark Magazine.</div>
+        <div class="video-blurb">Excerpts from my stories at <a href="https://undark.org" target="_blank">Undark Magazine</a>.</div>
       </div>
 
       <div class="resume-wrap">
