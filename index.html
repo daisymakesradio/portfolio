@@ -95,7 +95,6 @@
     .screen { display:none; }
     .screen.active { display:block; }
 
-    /* ENTER SCREEN */
     .enter-prompt { margin-top:2rem; color:var(--dim); font-size:13px; margin-bottom:1.2rem; }
 
     .enter-btn {
@@ -136,7 +135,6 @@
       margin-left:2px;
     }
 
-    /* PORTFOLIO SCREEN */
     .section-label { color: var(--red); font-size: 11px; letter-spacing: 2px; margin-bottom: 0.5rem; }
 
     .about-text {
@@ -220,13 +218,52 @@
     }
     .music-toggle-bottom:hover { color: var(--yellow); }
 
-    /* autoplay notice */
     #autoplay-notice {
       display: none;
       margin-top: 0.6rem;
       color: var(--dim);
       font-size: 11px;
     }
+
+    /* VIDEO PLAYER */
+    .video-wrap {
+      margin-top: 1.4rem;
+      opacity: 0;
+      animation: slideIn 0.5s ease 0.45s forwards;
+    }
+    .video-label { color: var(--red); font-size: 11px; letter-spacing: 2px; margin-bottom: 0.5rem; }
+    .video-title { color: var(--yellow); font-family: 'VT323', monospace; font-size: 20px; letter-spacing: 1px; margin-bottom: 10px; }
+    video {
+      width: 100%;
+      max-width: 620px;
+      border: 1px solid var(--red);
+      display: block;
+      background: #000;
+      filter: saturate(0.85) contrast(1.05);
+    }
+
+    /* VIDEO BLURB */
+    .video-blurb {
+      color: var(--dim);
+      font-size: 12px;
+      margin-top: 0.7rem;
+      max-width: 620px;
+      line-height: 1.6;
+    }
+
+    /* RESUME */
+    .resume-wrap {
+      margin-top: 1.8rem;
+    }
+    .resume-link {
+      color: var(--dim);
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-decoration: none;
+      transition: color 0.1s;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    .resume-link:hover { color: var(--yellow); }
   </style>
 </head>
 <body>
@@ -263,13 +300,13 @@
 
       <div class="section-label">// about</div>
       <div class="about-text">
-        <p>Daisy is a writer, producer, editor, designer and engineer.</p>
-        <p>This transmission is a culmination of over a decade as an artist and storyteller.</p>
+        <p>Daisy is a writer, journalist, filmmaker, producer, editor, sound designer and engineer.</p>
+        <p>The following artifacts span more than a decade as an artist and storyteller.</p>
       </div>
 
 <!--       <div class="divider">-----------------------------------------------</div> -->
 
-      <div class="section-label">// now playing</div>
+      <div class="section-label">// audio transmission</div>
       <div class="player">
         <div class="track-title">MAIN ARTIFACT</div>
         <div class="player-controls">
@@ -281,8 +318,23 @@
         </div>
       </div>
 
-     <div class="back-btn" onclick="goBack()">[ back ]</div>
-     <!--  <button class="music-toggle-bottom" id="music-toggle-portfolio" onclick="toggleHomeMusic()">[ mute home music ]</button> -->
+      <!-- VIDEO PLAYER — comment out before pushing if not ready -->
+      <div class="video-wrap">
+        <div class="video-label">// visual transmission</div>
+        <div class="video-title">VISUAL ARTIFACT: AM I ALIVE?</div>
+        <video controls preload="none">
+          <source src="visual_transmission.MOV" type="video/mp4">
+        </video>
+        <div class="video-blurb">Excerpts from my stories at Undark Magazine.</div>
+      </div>
+
+      <div class="resume-wrap">
+        <div class="section-label">// files</div>
+        <a class="resume-link" href="DAISY-JAMES_RESUME-2026.pdf" download>[ download resume ]</a>
+      </div>
+
+      <div class="back-btn" onclick="goBack()">[ back ]</div>
+<!--       <button class="music-toggle-bottom" id="music-toggle-portfolio" onclick="toggleHomeMusic()">[ mute home music ]</button> -->
 
     </div>
 
@@ -290,37 +342,33 @@
 </div>
 
 <script>
-  // ── AUDIO SETUP ──
-  const homeAudio   = new Audio('');
-/*   const bootSound   = new Audio('calling-you.aiff'); */
-  const mainAudio   = new Audio('calling-you.mp3');
+  const homeAudio  = new Audio('');
+/*   const bootSound  = new Audio('calling-you.aiff'); */
+  const enterSound = new Audio('calling-you.mp3');
+  const mainAudio  = new Audio('calling-you.mp3');
 
   homeAudio.loop = true;
   let homeMuted = false;
   let homeMusicStarted = false;
 
-  // ── BOOT SOUND: plays as soon as page loads ──
-  // Browsers may block this too, but we try
-  window.addEventListener('load', () => {
+/*   window.addEventListener('load', () => {
     bootSound.play().catch(() => {});
-  });
+  }); */
 
-/*   // ── HOME MUSIC: try autoplay after boot sequence ──
-  setTimeout(() => {
+/*   setTimeout(() => {
     homeAudio.play().then(() => {
       homeMusicStarted = true;
     }).catch(() => {
-      // Autoplay blocked — show hint, start on ENTER click instead
       document.getElementById('autoplay-notice').style.display = 'block';
       document.getElementById('music-toggle-enter').textContent = '[ play home music ]';
       homeMuted = true;
     });
   }, 2200); */
 
-  // ── ENTER BUTTON ──
   function handleEnter() {
-/*     // If autoplay was blocked, start music on first interaction
-    if (homeMuted && !homeMusicStarted) {
+    enterSound.currentTime = 0;
+    enterSound.play().catch(() => {});
+/*     if (homeMuted && !homeMusicStarted) {
       homeMuted = false;
       homeMusicStarted = true;
       homeAudio.play().catch(() => {});
@@ -330,25 +378,22 @@
     showScreen('portfolio');
   }
 
-/*   // ── MUTE TOGGLE ──
-  function toggleHomeMusic() {
+/*   function toggleHomeMusic() {
     homeMuted = !homeMuted;
     homeAudio.muted = homeMuted;
-    // If music never started, start it now
     if (!homeMuted && !homeMusicStarted) {
       homeAudio.play().catch(() => {});
       homeMusicStarted = true;
     }
     updateMuteLabels(homeMuted);
-  } */
+  }
 
-/*   function updateMuteLabels(muted) {
+  function updateMuteLabels(muted) {
     const label = muted ? '[ play home music ]' : '[ mute home music ]';
     document.getElementById('music-toggle-enter').textContent = label;
     document.getElementById('music-toggle-portfolio').textContent = label;
   } */
 
-  // ── MAIN ARTIFACT PLAYER ──
   function fmt(s) {
     if (!s || isNaN(s)) return '0:00';
     return Math.floor(s/60) + ':' + Math.floor(s%60).toString().padStart(2,'0');
@@ -360,11 +405,11 @@
     document.getElementById('time-display').textContent = fmt(mainAudio.currentTime) + ' / ' + fmt(mainAudio.duration);
   });
 
-/*   mainAudio.addEventListener('ended', () => {
+  mainAudio.addEventListener('ended', () => {
     document.getElementById('play-btn').textContent = 'PLAY';
     document.getElementById('progress-fill').style.width = '0%';
-    if (!homeMuted) homeAudio.play();
-  }); */
+/*     if (!homeMuted) homeAudio.play(); */
+  });
 
   document.getElementById('progress-wrap').addEventListener('click', e => {
     if (!mainAudio.duration) return;
@@ -384,7 +429,6 @@
     }
   });
 
-  // ── NAVIGATION ──
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-' + id).classList.add('active');
