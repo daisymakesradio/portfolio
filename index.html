@@ -377,6 +377,7 @@
 <script>
   const homeAudio  = new Audio('');
 /*   const bootSound  = new Audio('calling-you.aiff'); */
+  const clickSound = new Audio('computer_mac_mouse_click_02.mp3');
   const enterSound = new Audio('calling-you.mp3');
   const mainAudio  = new Audio('MAIN ARTIFACT.mp3');
 
@@ -451,6 +452,8 @@
   });
 
   document.getElementById('play-btn').addEventListener('click', () => {
+    clickSound.currentTime = 0;
+    clickSound.play().catch(() => {});
     if (mainAudio.paused) {
       homeAudio.pause();
       mainAudio.play();
@@ -461,6 +464,19 @@
       if (!homeMuted) homeAudio.play();
     }
   });
+
+  // Video click sound
+  const videoEl = document.querySelector('video');
+  if (videoEl) {
+    videoEl.addEventListener('play', () => {
+      clickSound.currentTime = 0;
+      clickSound.play().catch(() => {});
+    });
+    videoEl.addEventListener('pause', () => {
+      clickSound.currentTime = 0;
+      clickSound.play().catch(() => {});
+    });
+  }
 
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
