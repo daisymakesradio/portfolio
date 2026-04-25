@@ -97,6 +97,30 @@
 
     .enter-prompt { margin-top:2rem; color:var(--dim); font-size:13px; margin-bottom:1.2rem; }
 
+    .enter-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 0.5rem;
+    }
+
+    .banner-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 4px 0;
+    }
+
+    .profile-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--red);
+      object-fit: cover;
+      display: block;
+      filter: saturate(0.7) contrast(1.1);
+    }
+
     .enter-btn {
       display: inline-block;
       border: 1px solid var(--red);
@@ -259,9 +283,7 @@
     .video-blurb a:hover { color: var(--white); }
 
     /* RESUME */
-    .resume-wrap {
-      margin-top: 1.8rem;
-    }
+    .resume-wrap { margin-top: 1.8rem; }
     .resume-link {
       color: var(--dim);
       font-size: 12px;
@@ -286,9 +308,12 @@
   </div>
 
   <div class="banner">
-    <div class="banner-border">==================================================</div>
-    <div class="banner-title">SIGNAL: A DAISYMAKESRADIO PORTFOLIO</div>
-    <div class="banner-border">==================================================</div>
+    <div class="banner-border">========================================================</div>
+    <div class="banner-title-row">
+      <img class="profile-icon" src="daisymakesradio_profile-pic.jpg" alt="Daisy James">
+      <span class="banner-title">SIGNAL: A DAISYMAKESRADIO PORTFOLIO</span>
+    </div>
+    <div class="banner-border">========================================================</div>
   </div>
 
   <div id="main-content">
@@ -299,7 +324,7 @@
       <button class="enter-btn" id="enter-btn" onclick="handleEnter()">ENTER</button>
 <!--       <button class="music-toggle" id="music-toggle-enter" onclick="toggleHomeMusic()">[ mute home music ]</button> -->
       <div id="autoplay-notice">// click ENTER to begin transmission</div>
-      <br><br><span class="cursor"></span>
+      <br><span class="cursor"></span>
     </div>
 
     <!-- SCREEN 2: PORTFOLIO -->
