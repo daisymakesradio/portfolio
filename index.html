@@ -351,6 +351,17 @@
 
       <div class="video-blurb">Excerpts from my stories at <a href="https://undark.org" target="_blank">Undark Magazine</a>.</div>
 
+      <div class="player" style="margin-top: 1.4rem;">
+        <div class="track-title">AUDIO ARTIFACT: GROWING PAINS</div>
+        <div class="player-controls">
+          <button class="play-btn" id="play-btn-2">PLAY</button>
+          <div class="progress-bar-wrap" id="progress-wrap-2">
+            <div class="progress-bar-fill" id="progress-fill-2"></div>
+          </div>
+          <div class="time-display" id="time-display-2">0:00 / 0:00</div>
+        </div>
+      </div>
+
       <!-- VIDEO PLAYER -->
       <div class="video-wrap">
         <div class="video-label">// visual transmission</div>
@@ -380,6 +391,7 @@
   const clickSound = new Audio('computer_mac_mouse_click_02.mp3');
   const enterSound = new Audio('calling-you.mp3');
   const mainAudio  = new Audio('MAIN ARTIFACT.mp3');
+  const mainAudio2 = new Audio("children's health.mp3");
 
   homeAudio.loop = true;
   let homeMuted = false;
@@ -445,6 +457,37 @@
 /*     if (!homeMuted) homeAudio.play(); */
   });
 
+  mainAudio2.addEventListener('timeupdate', () => {
+    const pct2 = mainAudio2.duration ? (mainAudio2.currentTime / mainAudio2.duration) * 100 : 0;
+    document.getElementById('progress-fill-2').style.width = pct2 + '%';
+    document.getElementById('time-display-2').textContent = fmt(mainAudio2.currentTime) + ' / ' + fmt(mainAudio2.duration);
+  });
+
+  mainAudio2.addEventListener('ended', () => {
+    document.getElementById('play-btn-2').textContent = 'PLAY';
+    document.getElementById('progress-fill-2').style.width = '0%';
+  });
+
+  document.getElementById('progress-wrap-2').addEventListener('click', e => {
+    if (!mainAudio2.duration) return;
+    const rect2 = document.getElementById('progress-wrap-2').getBoundingClientRect();
+    mainAudio2.currentTime = ((e.clientX - rect2.left) / rect2.width) * mainAudio2.duration;
+  });
+
+  document.getElementById('play-btn-2').addEventListener('click', () => {
+    clickSound.currentTime = 0;
+    clickSound.play().catch(() => {});
+    if (mainAudio2.paused) {
+      homeAudio.pause();
+      mainAudio2.play();
+      document.getElementById('play-btn-2').textContent = 'PAUSE';
+    } else {
+      mainAudio2.pause();
+      document.getElementById('play-btn-2').textContent = 'PLAY';
+      if (!homeMuted) homeAudio.play();
+    }
+  });
+
   document.getElementById('progress-wrap').addEventListener('click', e => {
     if (!mainAudio.duration) return;
     const rect = document.getElementById('progress-wrap').getBoundingClientRect();
@@ -488,6 +531,10 @@
     mainAudio.currentTime = 0;
     document.getElementById('play-btn').textContent = 'PLAY';
     document.getElementById('progress-fill').style.width = '0%';
+    mainAudio2.pause();
+    mainAudio2.currentTime = 0;
+    document.getElementById('play-btn-2').textContent = 'PLAY';
+    document.getElementById('progress-fill-2').style.width = '0%';
     if (!homeMuted) homeAudio.play();
     showScreen('enter');
   }
