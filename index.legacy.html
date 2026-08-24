@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SIGNAL: A DAISYMAKESRADIO PORTFOLIO</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
+
+    :root {
+      --yellow: #f5c400;
+      --red: #cc2200;
+      --red-bright: #ff3300;
+      --white: #f0ece0;
+      --dim: #888870;
+      --bg: #0a0a08;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--yellow);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 15px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 3px);
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.4;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.7) 100%);
+      pointer-events: none;
+      z-index: 998;
+    }
+
+    #terminal {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      position: relative;
+      z-index: 1;
+      animation: flicker 8s infinite;
+    }
+
+    @keyframes flicker {
+      0%,100% { opacity: 1; }
+      92.9% { opacity: 1; }
+      93%   { opacity: 0; }
+      93.1% { opacity: 1; }
+      96.9% { opacity: 1; }
+      97%   { opacity: 0; }
+      97.1% { opacity: 1; }
+    }
+
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+    @keyframes revealLine { to { opacity:1; } }
+    @keyframes slideIn { from { opacity:0; transform:translateX(-8px); } to { opacity:1; transform:translateX(0); } }
+    @keyframes blink { 50% { opacity:0; } }
+
+    .boot-line {
+      opacity: 0;
+      animation: revealLine 0.1s ease forwards;
+      color: var(--dim);
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+    .boot-line:nth-child(1) { animation-delay: 0.10s; }
+    .boot-line:nth-child(2) { animation-delay: 0.25s; }
+    .boot-line:nth-child(3) { animation-delay: 0.40s; }
+    .boot-line:nth-child(4) { animation-delay: 0.55s; }
+    .boot-line:nth-child(5) { animation-delay: 0.70s; }
+    .boot-line:nth-child(6) { animation-delay: 0.85s; }
+
+    .banner { opacity:0; animation: fadeIn 0.6s ease 1.2s forwards; margin: 1.5rem 0 0.5rem; }
+    .banner-border { color: var(--red); font-family:'VT323',monospace; font-size:18px; letter-spacing:1px; }
+    .banner-title { color: var(--yellow); font-family:'VT323',monospace; font-size:24px; letter-spacing:2px; padding:4px 0; text-shadow:0 0 12px rgba(245,196,0,0.4); }
+
+    #main-content { opacity:0; animation: fadeIn 0.5s ease 1.8s forwards; }
+
+    .screen { display:none; }
+    .screen.active { display:block; }
+
+    .enter-prompt { margin-top:2rem; color:var(--dim); font-size:13px; margin-bottom:1.2rem; }
+
+    .enter-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 0.5rem;
+    }
+
+    .banner-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 4px 0;
+    }
+
+    .profile-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--red);
+      object-fit: cover;
+      display: block;
+      filter: saturate(0.7) contrast(1.1);
+    }
+
+    .enter-btn {
+      display: inline-block;
+      border: 1px solid var(--red);
+      color: var(--yellow);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 15px;
+      padding: 8px 28px;
+      cursor: pointer;
+      letter-spacing: 3px;
+      background: none;
+      transition: all 0.15s;
+    }
+    .enter-btn:hover { background: var(--red); color: var(--bg); }
+
+    .music-toggle {
+      display: block;
+      margin-top: 1rem;
+      color: var(--dim);
+      font-size: 12px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 1px;
+      transition: color 0.1s;
+      padding: 0;
+    }
+    .music-toggle:hover { color: var(--yellow); }
+
+    .cursor {
+      display: inline-block;
+      width: 4px; height:12px;
+      background: var(--yellow);
+      animation: blink 1.7s step-end infinite;
+      vertical-align: middle;
+      margin-left:2px;
+    }
+
+    .section-label { color: var(--red); font-size: 11px; letter-spacing: 2px; margin-bottom: 0.5rem; }
+
+    .about-text {
+      color: var(--white);
+      font-size: 14px;
+      line-height: 1.9;
+      max-width: 580px;
+      margin-bottom: 0.4rem;
+      opacity: 0;
+      animation: slideIn 0.5s ease 0.15s forwards;
+    }
+    .about-text p { margin-bottom: 0.7rem; }
+
+    .divider { color:var(--red); font-family:'VT323',monospace; font-size:18px; margin: 1.6rem 0 1.2rem; }
+
+    .player { opacity:0; animation: slideIn 0.5s ease 0.3s forwards; }
+
+    .track-title {
+      color: var(--yellow);
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .player-controls { display:flex; align-items:center; gap:10px; }
+
+    .play-btn {
+      background: none;
+      border: 1px solid var(--red);
+      color: var(--yellow);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      padding: 4px 12px;
+      cursor: pointer;
+      min-width: 70px;
+      text-align: center;
+      transition: all 0.1s;
+    }
+    .play-btn:hover { background:var(--red); color:var(--bg); }
+
+    .progress-bar-wrap {
+      flex: 1;
+      height: 6px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      cursor: pointer;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--red);
+      width: 0%;
+      pointer-events: none;
+      transition: width 0.2s linear;
+    }
+
+    .time-display { color:var(--dim); font-size:11px; min-width:80px; text-align:right; }
+
+    .back-btn {
+      color: var(--dim);
+      cursor: pointer;
+      font-size: 13px;
+      margin-top: 2rem;
+      display: inline-block;
+      transition: color 0.1s;
+    }
+    .back-btn:hover { color:var(--red-bright); }
+
+    .music-toggle-bottom {
+      display: block;
+      margin-top: 1rem;
+      color: var(--dim);
+      font-size: 12px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 1px;
+      transition: color 0.1s;
+      padding: 0;
+    }
+    .music-toggle-bottom:hover { color: var(--yellow); }
+
+    #autoplay-notice {
+      display: none;
+      margin-top: 0.6rem;
+      color: var(--dim);
+      font-size: 11px;
+    }
+
+    /* VIDEO PLAYER */
+    .video-wrap {
+      margin-top: 1.4rem;
+      opacity: 0;
+      animation: slideIn 0.5s ease 0.45s forwards;
+    }
+    .video-label { color: var(--red); font-size: 11px; letter-spacing: 2px; margin-bottom: 0.5rem; }
+    .video-title { color: var(--yellow); font-family: 'VT323', monospace; font-size: 20px; letter-spacing: 1px; margin-bottom: 10px; }
+    video {
+      width: 100%;
+      max-width: 620px;
+      border: 1px solid var(--red);
+      display: block;
+      background: #000;
+      filter: saturate(0.85) contrast(1.05);
+    }
+
+    /* VIDEO BLURB */
+    .video-blurb {
+      color: var(--dim);
+      font-size: 12px;
+      margin-top: 0.7rem;
+      max-width: 620px;
+      line-height: 1.6;
+    }
+    .video-blurb a {
+      color: var(--dim);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.1s;
+    }
+    .video-blurb a:hover { color: var(--white); }
+
+    /* RESUME */
+    .resume-wrap { margin-top: 1.8rem; }
+    .resume-link {
+      color: var(--dim);
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-decoration: none;
+      transition: color 0.1s;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    .resume-link:hover { color: var(--yellow); }
+  </style>
+</head>
+<body>
+<div id="terminal">
+
+  <div id="boot">
+    <div class="boot-line">// SYSTEM INIT ............................... OK</div>
+    <div class="boot-line">// SIGNAL CARRIER DETECTED ................... OK</div>
+    <div class="boot-line">// LOADING AUDIO DRIVERS ..................... OK</div>
+    <div class="boot-line">// MOUNTING PORTFOLIO ........................ OK</div>
+    <div class="boot-line">// DAISYMAKESRADIO NODE ...................... OK</div>
+    <div class="boot-line">// ESTABLISHING CONNECTION ................... OK</div>
+  </div>
+
+  <div class="banner">
+    <div class="banner-border">==================================================</div>
+    <div class="banner-title-row">
+      <span class="banner-title">SIGNAL: A DAISYMAKESRADIO PORTFOLIO</span>
+    </div>
+    <div class="banner-border">==================================================</div>
+  </div>
+
+  <div id="main-content">
+
+    <!-- SCREEN 1: ENTER -->
+    <div id="screen-enter" class="screen active">
+      <div class="enter-prompt">// <i>Systems Reveal. Signals Heal.</i></div>
+      <button class="enter-btn" id="enter-btn" onclick="handleEnter()">ENTER</button>
+<!--       <button class="music-toggle" id="music-toggle-enter" onclick="toggleHomeMusic()">[ mute home music ]</button> -->
+      <div id="autoplay-notice">// click ENTER to begin transmission</div>
+      <br><span class="cursor"></span>
+    </div>
+
+    <!-- SCREEN 2: PORTFOLIO -->
+    <div id="screen-portfolio" class="screen">
+
+      <div class="section-label">// about</div>
+      <div class="about-text">
+        <p>Daisy is a writer, filmmaker, producer, editor, sound designer and engineer with over a decade of experience.</p>
+<!--         <p>The following artifacts span more than a decade as an artist and storyteller.</p> -->
+      </div>
+
+<!--       <div class="divider">-----------------------------------------------</div> -->
+
+      <div class="section-label">// audio transmission</div>
+      <div class="player">
+        <div class="track-title">AUDIO ARTIFACT: DEATH & PEACHES</div>
+        <div class="player-controls">
+          <button class="play-btn" id="play-btn">PLAY</button>
+          <div class="progress-bar-wrap" id="progress-wrap">
+            <div class="progress-bar-fill" id="progress-fill"></div>
+          </div>
+          <div class="time-display" id="time-display">0:00 / 0:00</div>
+        </div>
+      </div>
+
+      <div class="video-blurb">Excerpts from my stories at <a href="https://undark.org" target="_blank">Undark Magazine</a>.</div>
+
+      <div class="player" style="margin-top: 1.4rem;">
+        <div class="track-title">AUDIO ARTIFACT: GROWING PAINS</div>
+        <div class="player-controls">
+          <button class="play-btn" id="play-btn-2">PLAY</button>
+          <div class="progress-bar-wrap" id="progress-wrap-2">
+            <div class="progress-bar-fill" id="progress-fill-2"></div>
+          </div>
+          <div class="time-display" id="time-display-2">0:00 / 0:00</div>
+        </div>
+      </div>
+
+      <div class="video-blurb">Excerpts from my stories on children's health for <a href="whyy.org" target="_blank">WHYY</a>.
+      </div>
+
+      <!-- VIDEO PLAYER -->
+      <div class="video-wrap">
+        <div class="video-label">// visual transmission</div>
+        <div class="video-title">VISUAL ARTIFACT: WE ARE STILL HERE</div>
+        <video controls preload="none" style="width:100%; max-width:620px; border:1px solid var(--red); display:block; background:#000;">
+          <source src="trans-day-visibility.mp4" type="video/mp4">
+        </video>
+        <div class="video-blurb">"We Are Still Here" — A Film by Daisy James (2022).</div>
+      </div>
+
+      <div class="resume-wrap">
+        <div class="section-label">// files</div>
+        <a class="resume-link" href="DAISY-JAMES_RESUME-2026.pdf" download>[ download resume ]</a>
+      </div>
+
+      <div class="back-btn" onclick="goBack()">[ back ]</div>
+<!--       <button class="music-toggle-bottom" id="music-toggle-portfolio" onclick="toggleHomeMusic()">[ mute home music ]</button> -->
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const homeAudio  = new Audio('');
+/*   const bootSound  = new Audio('calling-you.aiff'); */
+  const clickSound = new Audio('computer_mac_mouse_click_02.mp3');
+  const enterSound = new Audio('calling-you.mp3');
+  const mainAudio  = new Audio('MAIN ARTIFACT.mp3');
+  const mainAudio2 = new Audio("children's health.mp3");
+
+  homeAudio.loop = true;
+  let homeMuted = false;
+  let homeMusicStarted = false;
+
+/*   window.addEventListener('load', () => {
+    bootSound.play().catch(() => {});
+  }); */
+
+/*   setTimeout(() => {
+    homeAudio.play().then(() => {
+      homeMusicStarted = true;
+    }).catch(() => {
+      document.getElementById('autoplay-notice').style.display = 'block';
+      document.getElementById('music-toggle-enter').textContent = '[ play home music ]';
+      homeMuted = true;
+    });
+  }, 2200); */
+
+  function handleEnter() {
+    enterSound.currentTime = 0;
+    enterSound.play().catch(() => {});
+/*     if (homeMuted && !homeMusicStarted) {
+      homeMuted = false;
+      homeMusicStarted = true;
+      homeAudio.play().catch(() => {});
+      updateMuteLabels(false);
+      document.getElementById('autoplay-notice').style.display = 'none';
+    } */
+    showScreen('portfolio');
+  }
+
+/*   function toggleHomeMusic() {
+    homeMuted = !homeMuted;
+    homeAudio.muted = homeMuted;
+    if (!homeMuted && !homeMusicStarted) {
+      homeAudio.play().catch(() => {});
+      homeMusicStarted = true;
+    }
+    updateMuteLabels(homeMuted);
+  }
+
+  function updateMuteLabels(muted) {
+    const label = muted ? '[ play home music ]' : '[ mute home music ]';
+    document.getElementById('music-toggle-enter').textContent = label;
+    document.getElementById('music-toggle-portfolio').textContent = label;
+  } */
+
+  function fmt(s) {
+    if (!s || isNaN(s)) return '0:00';
+    return Math.floor(s/60) + ':' + Math.floor(s%60).toString().padStart(2,'0');
+  }
+
+  mainAudio.addEventListener('timeupdate', () => {
+    const pct = mainAudio.duration ? (mainAudio.currentTime / mainAudio.duration) * 100 : 0;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('time-display').textContent = fmt(mainAudio.currentTime) + ' / ' + fmt(mainAudio.duration);
+  });
+
+  mainAudio.addEventListener('ended', () => {
+    document.getElementById('play-btn').textContent = 'PLAY';
+    document.getElementById('progress-fill').style.width = '0%';
+/*     if (!homeMuted) homeAudio.play(); */
+  });
+
+  mainAudio2.addEventListener('timeupdate', () => {
+    const pct2 = mainAudio2.duration ? (mainAudio2.currentTime / mainAudio2.duration) * 100 : 0;
+    document.getElementById('progress-fill-2').style.width = pct2 + '%';
+    document.getElementById('time-display-2').textContent = fmt(mainAudio2.currentTime) + ' / ' + fmt(mainAudio2.duration);
+  });
+
+  mainAudio2.addEventListener('ended', () => {
+    document.getElementById('play-btn-2').textContent = 'PLAY';
+    document.getElementById('progress-fill-2').style.width = '0%';
+  });
+
+  document.getElementById('progress-wrap-2').addEventListener('click', e => {
+    if (!mainAudio2.duration) return;
+    const rect2 = document.getElementById('progress-wrap-2').getBoundingClientRect();
+    mainAudio2.currentTime = ((e.clientX - rect2.left) / rect2.width) * mainAudio2.duration;
+  });
+
+  document.getElementById('play-btn-2').addEventListener('click', () => {
+    clickSound.currentTime = 0;
+    clickSound.play().catch(() => {});
+    if (mainAudio2.paused) {
+      homeAudio.pause();
+      mainAudio2.play();
+      document.getElementById('play-btn-2').textContent = 'PAUSE';
+    } else {
+      mainAudio2.pause();
+      document.getElementById('play-btn-2').textContent = 'PLAY';
+      if (!homeMuted) homeAudio.play();
+    }
+  });
+
+  document.getElementById('progress-wrap').addEventListener('click', e => {
+    if (!mainAudio.duration) return;
+    const rect = document.getElementById('progress-wrap').getBoundingClientRect();
+    mainAudio.currentTime = ((e.clientX - rect.left) / rect.width) * mainAudio.duration;
+  });
+
+  document.getElementById('play-btn').addEventListener('click', () => {
+    clickSound.currentTime = 0;
+    clickSound.play().catch(() => {});
+    if (mainAudio.paused) {
+      homeAudio.pause();
+      mainAudio.play();
+      document.getElementById('play-btn').textContent = 'PAUSE';
+    } else {
+      mainAudio.pause();
+      document.getElementById('play-btn').textContent = 'PLAY';
+      if (!homeMuted) homeAudio.play();
+    }
+  });
+
+  // Video click sound
+  const videoEl = document.querySelector('video');
+  if (videoEl) {
+    videoEl.addEventListener('play', () => {
+      clickSound.currentTime = 0;
+      clickSound.play().catch(() => {});
+    });
+    videoEl.addEventListener('pause', () => {
+      clickSound.currentTime = 0;
+      clickSound.play().catch(() => {});
+    });
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+  }
+
+  function goBack() {
+    mainAudio.pause();
+    mainAudio.currentTime = 0;
+    document.getElementById('play-btn').textContent = 'PLAY';
+    document.getElementById('progress-fill').style.width = '0%';
+    mainAudio2.pause();
+    mainAudio2.currentTime = 0;
+    document.getElementById('play-btn-2').textContent = 'PLAY';
+    document.getElementById('progress-fill-2').style.width = '0%';
+    if (!homeMuted) homeAudio.play();
+    showScreen('enter');
+  }
+</script>
+</body>
+</html>
