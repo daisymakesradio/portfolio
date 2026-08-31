@@ -520,42 +520,6 @@
       padding: 1rem 0 0;
     }
 
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    html:not(.is-entered) body { overflow: hidden; }
-    html:not(.is-entered) #site {
-      display: none;
-    }
-    html.is-entered #site {
-      animation: fadeIn 0.7s ease forwards;
-    }
-    html.is-entered #enter-wrap {
-      display: none;
-    }
-
-    #enter-wrap {
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 0 1.1rem 1.2rem;
-    }
-
-    .enter-btn {
-      display: inline-block;
-      border: 1px solid var(--red);
-      color: var(--yellow);
-      font-family: inherit;
-      font-size: 15px;
-      padding: 8px 28px;
-      cursor: pointer;
-      letter-spacing: 3px;
-      background: none;
-      transition: all 0.15s;
-      pointer-events: auto;
-    }
-    .enter-btn:hover {
-      background: var(--red);
-      color: var(--bg);
-    }
   </style>
 </head>
 <body>
@@ -570,10 +534,6 @@
     </div>
     <p class="about-text">Daisy is a writer, filmmaker, producer, editor, sound designer and engineer with over a decade of experience.</p>
   </header>
-
-  <div id="enter-wrap">
-    <button type="button" class="enter-btn" id="enter-btn">ENTER</button>
-  </div>
 
   <div id="site">
   <div class="vignette top" aria-hidden="true"></div>
@@ -966,23 +926,6 @@
   </div>
 
   <script>
-  (function () {
-    const enterSound = new Audio('calling-you.mp3');
-    const btn = document.getElementById('enter-btn');
-    if (!btn) return;
-
-    let started = false;
-    btn.addEventListener('click', function () {
-      if (started) return;
-      started = true;
-      enterSound.currentTime = 0;
-      enterSound.play().catch(function () {});
-      document.documentElement.classList.add('is-entered');
-      window.scrollTo(0, 0);
-      if (typeof window._scrollWarpPaint === 'function') window._scrollWarpPaint();
-    });
-  })();
-
   (function () {
     const EDGE = 0.34;
     let panels = [];
